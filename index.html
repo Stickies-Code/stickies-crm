@@ -14,8 +14,9 @@
   --surface:#1A1A24;
   --surface2:#22222F;
   --border:#2E2E3E;
-  --accent:#C9A96E;
-  --accent2:#E8C99A;
+  --accent:#F4A7B9;
+  --accent2:#F9CDD8;
+  --accentdim:#3D2028;
   --text:#F0EDE8;
   --muted:#7A7A8C;
   --green:#4CAF7D;
@@ -24,31 +25,27 @@
   --radius:10px;
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-a{color:inherit;text-decoration:none}
 
-/* LAYOUT */
 .shell{display:flex;min-height:100vh}
 .sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:1.25rem 0;position:fixed;top:0;left:0;bottom:0;z-index:10}
 .main{margin-left:220px;padding:2rem;flex:1;min-height:100vh}
 
-/* SIDEBAR */
-.logo{display:flex;align-items:center;gap:10px;padding:0 1.25rem 1.5rem}
-.logo-icon{width:34px;height:34px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.logo-text{font-size:14px;font-weight:600;color:var(--text)}
-.logo-sub{font-size:10px;color:var(--muted)}
+.logo{display:flex;align-items:center;gap:10px;padding:0 1.25rem 1.5rem;border-bottom:1px solid var(--border);margin-bottom:.75rem}
+.logo img{height:28px;width:auto;object-fit:contain}
+.logo-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
 .nav-item{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;font-size:13px;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .15s}
 .nav-item:hover{color:var(--text);background:var(--surface2)}
-.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(201,169,110,.07)}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(244,167,185,.07)}
 .nav-icon{font-size:16px;width:20px;text-align:center}
 .nav-sep{height:1px;background:var(--border);margin:.75rem 1.25rem}
-.sidebar-bottom{margin-top:auto;padding:1rem 1.25rem;font-size:11px;color:var(--muted);border-top:1px solid var(--border)}
+.sidebar-bottom{margin-top:auto;padding:1rem 1.25rem;font-size:11px;color:var(--muted);border-top:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.sidebar-bottom img{height:16px;opacity:.4}
 
-/* VIEWS */
 .view{display:none}.view.active{display:block}
 .page-title{font-size:22px;font-weight:600;margin-bottom:.25rem}
 .page-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem}
 
-/* STATS */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem}
 .stat-label{font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
@@ -56,7 +53,6 @@ a{color:inherit;text-decoration:none}
 .stat-delta{font-size:12px;margin-top:6px;display:flex;align-items:center;gap:4px}
 .up{color:var(--green)}.down{color:var(--red)}.neu{color:var(--muted)}
 
-/* CHARTS */
 .charts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
 .chart-title{font-size:13px;font-weight:500;color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;gap:6px}
@@ -67,7 +63,6 @@ a{color:inherit;text-decoration:none}
 .bar-lbl{font-size:10px;color:var(--muted)}
 .bar-val{font-size:9px;color:var(--accent);font-weight:500}
 
-/* TOP LIST */
 .top-item{margin-bottom:10px}
 .top-item-head{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
 .top-item-name{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:72%}
@@ -75,14 +70,12 @@ a{color:inherit;text-decoration:none}
 .top-bar{height:5px;background:var(--surface2);border-radius:3px}
 .top-bar-fill{height:100%;background:var(--accent);border-radius:3px}
 
-/* COMPARE */
 .compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
 .cmp{background:var(--surface2);border-radius:var(--radius);padding:.9rem;text-align:center}
 .cmp-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
 .cmp-val{font-size:20px;font-weight:600}
 .cmp-delta{font-size:11px;margin-top:3px}
 
-/* TABLE */
 .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .table-toolbar{display:flex;gap:8px;padding:.875rem 1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
 .table-toolbar input,.table-toolbar select{height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:12px;font-family:'Inter',sans-serif}
@@ -96,21 +89,19 @@ table{width:100%;border-collapse:collapse;font-size:12px}
 th{background:var(--surface2);color:var(--muted);font-weight:500;padding:9px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
 td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 tr:last-child td{border-bottom:none}
-tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
+tr.row:hover td{background:rgba(244,167,185,.04);cursor:pointer}
 
-/* BADGES */
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:500}
 .b-si{background:rgba(76,175,125,.15);color:var(--green)}
 .b-no{background:rgba(224,85,85,.15);color:var(--red)}
 .b-noent{background:rgba(122,122,140,.15);color:var(--muted)}
 .b-lead{background:rgba(122,122,140,.15);color:var(--muted)}
 .b-contactado{background:rgba(214,137,16,.15);color:var(--orange)}
-.b-negociando{background:rgba(201,169,110,.15);color:var(--accent)}
+.b-negociando{background:rgba(244,167,185,.15);color:var(--accent)}
 .b-activo{background:rgba(76,175,125,.15);color:var(--green)}
 .b-perdido{background:rgba(224,85,85,.15);color:var(--red)}
 .b-distribuidor{background:rgba(130,100,200,.15);color:#9B7FE8}
 
-/* PANEL */
 .panel-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:none}
 .panel-bg.open{display:block}
 .panel{position:fixed;top:0;right:0;bottom:0;width:400px;background:var(--surface);border-left:1px solid var(--border);z-index:101;overflow-y:auto;padding:1.5rem;transform:translateX(100%);transition:transform .25s}
@@ -124,7 +115,6 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
 .pl{color:var(--muted)}.pv{font-weight:500;text-align:right;max-width:60%}
 .notes-box{background:var(--surface2);border-radius:8px;padding:10px;font-size:13px;line-height:1.6;min-height:60px;color:var(--text)}
 
-/* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center}
 .modal-bg.open{display:flex}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.75rem;width:540px;max-width:95vw;max-height:88vh;overflow-y:auto}
@@ -140,7 +130,6 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
 .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text)}
 .chk input{width:15px;height:15px;cursor:pointer;accent-color:var(--accent)}
 
-/* COMERCIALES */
 .com-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:12px}
 .com-avatar{width:42px;height:42px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#0F0F14}
 .com-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
@@ -148,13 +137,11 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
 .cs-val{font-size:20px;font-weight:600}
 .cs-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;margin-top:2px}
 
-/* LOADING */
 .loading{display:flex;align-items:center;justify-content:center;height:200px;color:var(--muted);font-size:14px}
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin-right:10px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .empty{text-align:center;padding:3rem;color:var(--muted);font-size:13px}
 
-/* TOAST */
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.75rem 1.25rem;font-size:13px;color:var(--text);z-index:999;transform:translateY(100px);opacity:0;transition:all .3s}
 .toast.show{transform:none;opacity:1}
 .toast.ok{border-color:var(--green);color:var(--green)}
@@ -162,41 +149,25 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
 </style>
 </head>
 <body>
-
 <div class="shell">
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="logo">
-    <div class="logo-icon">⭐</div>
-    <div>
-      <div class="logo-text">Stickies</div>
-      <div class="logo-sub">CRM B2B Farmacias</div>
-    </div>
+    <img src="logo.png" alt="Stickies">
+    <div class="logo-sub">CRM B2B Farmacias</div>
   </div>
   <nav>
-    <div class="nav-item active" onclick="showView('dashboard',this)" data-view="dashboard">
-      <span class="nav-icon">📊</span> Dashboard
-    </div>
-    <div class="nav-item" onclick="showView('pedidos',this)" data-view="pedidos">
-      <span class="nav-icon">🧾</span> Pedidos
-    </div>
-    <div class="nav-item" onclick="showView('farmacias',this)" data-view="farmacias">
-      <span class="nav-icon">🏪</span> Farmacias
-    </div>
+    <div class="nav-item active" onclick="showView('dashboard',this)"><span class="nav-icon">📊</span> Dashboard</div>
+    <div class="nav-item" onclick="showView('pedidos',this)"><span class="nav-icon">🧾</span> Pedidos</div>
+    <div class="nav-item" onclick="showView('farmacias',this)"><span class="nav-icon">🏪</span> Farmacias</div>
     <div class="nav-sep"></div>
-    <div class="nav-item" onclick="showView('comerciales',this)" data-view="comerciales">
-      <span class="nav-icon">👤</span> Comerciales
-    </div>
+    <div class="nav-item" onclick="showView('comerciales',this)"><span class="nav-icon">👤</span> Comerciales</div>
   </nav>
   <div class="sidebar-bottom">
-    Stickies B2B · 2026
+    <img src="logo.png" alt=""> Stickies B2B · 2026
   </div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
-
-<!-- DASHBOARD -->
 <div class="view active" id="view-dashboard">
   <div class="page-title">Dashboard</div>
   <div class="page-sub" id="dash-sub">Cargando datos...</div>
@@ -204,7 +175,7 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
   <div class="charts">
     <div class="chart-card">
       <div class="chart-title">Facturación neta mensual</div>
-      <div class="bars" id="bar-chart"><div class="loading"><div class="spinner"></div></div></div>
+      <div class="bars" id="bar-chart"></div>
     </div>
     <div class="chart-card">
       <div class="chart-title">Top farmacias por neto</div>
@@ -217,13 +188,9 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
   </div>
 </div>
 
-<!-- PEDIDOS -->
 <div class="view" id="view-pedidos">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem">
-    <div>
-      <div class="page-title">Pedidos</div>
-      <div class="page-sub">Historial completo de facturas B2B</div>
-    </div>
+    <div><div class="page-title">Pedidos</div><div class="page-sub">Historial completo de facturas B2B</div></div>
     <button class="btn accent" onclick="openModal('pedido')">+ Nuevo pedido</button>
   </div>
   <div class="table-wrap">
@@ -239,13 +206,9 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
   </div>
 </div>
 
-<!-- FARMACIAS -->
 <div class="view" id="view-farmacias">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem">
-    <div>
-      <div class="page-title">Farmacias</div>
-      <div class="page-sub">CRM de visitas y seguimiento</div>
-    </div>
+    <div><div class="page-title">Farmacias</div><div class="page-sub">CRM de visitas y seguimiento</div></div>
     <button class="btn accent" onclick="openModal('farmacia')">+ Nueva farmacia</button>
   </div>
   <div class="table-wrap">
@@ -261,22 +224,16 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
   </div>
 </div>
 
-<!-- COMERCIALES -->
 <div class="view" id="view-comerciales">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem">
-    <div>
-      <div class="page-title">Comerciales</div>
-      <div class="page-sub">Control de actividad comercial</div>
-    </div>
+    <div><div class="page-title">Comerciales</div><div class="page-sub">Control de actividad comercial</div></div>
     <button class="btn accent" onclick="openModal('comercial')">+ Nuevo comercial</button>
   </div>
   <div id="lista-comerciales"><div class="loading"><div class="spinner"></div>Cargando...</div></div>
 </div>
-
 </main>
 </div>
 
-<!-- PANEL LATERAL -->
 <div class="panel-bg" id="panelBg" onclick="closePanel()"></div>
 <div class="panel" id="sidePanel">
   <div class="panel-head">
@@ -286,7 +243,6 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
   <div id="pContent"></div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
 <div class="modal">
   <h3 id="mTitle">Nuevo pedido</h3>
@@ -298,128 +254,60 @@ tr.row:hover td{background:rgba(201,169,110,.04);cursor:pointer}
 </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-const SUPABASE_URL = 'https://mndxvmzirgoarrrmtrwh.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_NUoEyA1ygJrcFl7xIfhUrA_CRRXFHfA';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://mndxvmzirgoarrrmtrwh.supabase.co';
+const SUPABASE_KEY='sb_publishable_NUoEyA1ygJrcFl7xIfhUrA_CRRXFHfA';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const MESES=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+let pedidos=[],farmacias=[],comerciales=[];
+let modalType=null,editId=null,currentPanel=null;
 
-const MESES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
-let pedidos=[], farmacias=[], comerciales=[];
-let modalType=null, editId=null, currentPanel=null;
-
-// INIT
 async function init(){
-  await Promise.all([loadPedidos(), loadFarmacias(), loadComerciales()]);
-  renderDashboard();
-  renderPedidos();
-  renderFarmacias();
-  renderComerciales();
+  await Promise.all([loadPedidos(),loadFarmacias(),loadComerciales()]);
+  renderDashboard();renderPedidos();renderFarmacias();renderComerciales();
 }
-
-async function loadPedidos(){
-  const {data,error}=await sb.from('pedidos').select('*').order('id');
-  if(!error) pedidos=data||[];
-}
-async function loadFarmacias(){
-  const {data,error}=await sb.from('farmacias').select('*').order('nombre');
-  if(!error) farmacias=data||[];
-}
-async function loadComerciales(){
-  const {data,error}=await sb.from('comerciales').select('*').order('nombre');
-  if(!error) comerciales=data||[];
-}
+async function loadPedidos(){const{data,error}=await sb.from('pedidos').select('*').order('id');if(!error)pedidos=data||[];}
+async function loadFarmacias(){const{data,error}=await sb.from('farmacias').select('*').order('nombre');if(!error)farmacias=data||[];}
+async function loadComerciales(){const{data,error}=await sb.from('comerciales').select('*').order('nombre');if(!error)comerciales=data||[];}
 
 function fmt(n){return Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function fmts(n){return Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:0,maximumFractionDigits:0})}
 function pct(a,b){return b===0?0:((a-b)/b*100)}
 function arrow(v){return v>=0?'↑':'↓'}
 function cls(v){return v>=0?'up':'down'}
-
 function netoMes(m){return pedidos.filter(p=>p.mes===m).reduce((s,p)=>s+(p.neto||0),0)}
 function brutoMes(m){return pedidos.filter(p=>p.mes===m).reduce((s,p)=>s+(p.bruto||0),0)}
 function comMes(m){return pedidos.filter(p=>p.mes===m).reduce((s,p)=>s+(p.comision||0),0)}
 
-// DASHBOARD
 function renderDashboard(){
-  const mesesConDatos = [...new Set(pedidos.map(p=>p.mes))].sort((a,b)=>MESES.indexOf(a)-MESES.indexOf(b));
-  const last = mesesConDatos[mesesConDatos.length-1]||'';
-  const prev = mesesConDatos[mesesConDatos.length-2]||'';
-  const netoCur=netoMes(last), netoPrev=netoMes(prev);
-  const brutoCur=brutoMes(last), brutoPrev=brutoMes(prev);
-  const totalNeto=pedidos.reduce((s,p)=>s+(p.neto||0),0);
-  const pendientes=pedidos.filter(p=>p.pagado!=='SI');
-  const pendienteVal=pendientes.reduce((s,p)=>s+(p.bruto||0),0);
-
+  const md=[...new Set(pedidos.map(p=>p.mes))].sort((a,b)=>MESES.indexOf(a)-MESES.indexOf(b));
+  const last=md[md.length-1]||'',prev=md[md.length-2]||'';
+  const nc=netoMes(last),np=netoMes(prev),bc=brutoMes(last),bp=brutoMes(prev);
+  const tn=pedidos.reduce((s,p)=>s+(p.neto||0),0);
+  const pend=pedidos.filter(p=>p.pagado!=='SI');
+  const pv=pend.reduce((s,p)=>s+(p.bruto||0),0);
   document.getElementById('dash-sub').textContent=`Actualizado · ${last} es el último mes con datos`;
-
   document.getElementById('kpis').innerHTML=`
-    <div class="stat">
-      <div class="stat-label">Neto ${last}</div>
-      <div class="stat-val">${fmts(netoCur)}€</div>
-      <div class="stat-delta ${cls(pct(netoCur,netoPrev))}">${arrow(pct(netoCur,netoPrev))} ${Math.abs(pct(netoCur,netoPrev)).toFixed(0)}% vs ${prev}</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Bruto ${last}</div>
-      <div class="stat-val">${fmts(brutoCur)}€</div>
-      <div class="stat-delta ${cls(pct(brutoCur,brutoPrev))}">${arrow(pct(brutoCur,brutoPrev))} ${Math.abs(pct(brutoCur,brutoPrev)).toFixed(0)}% vs ${prev}</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Neto total acumulado</div>
-      <div class="stat-val" style="color:var(--accent)">${fmts(totalNeto)}€</div>
-      <div class="stat-delta neu">Feb – ${last} 2026</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Pendiente cobro</div>
-      <div class="stat-val" style="color:var(--red)">${fmts(pendienteVal)}€</div>
-      <div class="stat-delta down">${pendientes.length} facturas sin cobrar</div>
-    </div>
-  `;
-
-  // Barras
-  const maxN=Math.max(...mesesConDatos.map(m=>netoMes(m)),1);
-  document.getElementById('bar-chart').innerHTML=mesesConDatos.map(m=>{
+    <div class="stat"><div class="stat-label">Neto ${last}</div><div class="stat-val">${fmts(nc)}€</div><div class="stat-delta ${cls(pct(nc,np))}">${arrow(pct(nc,np))} ${Math.abs(pct(nc,np)).toFixed(0)}% vs ${prev}</div></div>
+    <div class="stat"><div class="stat-label">Bruto ${last}</div><div class="stat-val">${fmts(bc)}€</div><div class="stat-delta ${cls(pct(bc,bp))}">${arrow(pct(bc,bp))} ${Math.abs(pct(bc,bp)).toFixed(0)}% vs ${prev}</div></div>
+    <div class="stat"><div class="stat-label">Neto total acumulado</div><div class="stat-val" style="color:var(--accent)">${fmts(tn)}€</div><div class="stat-delta neu">Feb – ${last} 2026</div></div>
+    <div class="stat"><div class="stat-label">Pendiente cobro</div><div class="stat-val" style="color:var(--red)">${fmts(pv)}€</div><div class="stat-delta down">${pend.length} facturas sin cobrar</div></div>`;
+  const maxN=Math.max(...md.map(m=>netoMes(m)),1);
+  document.getElementById('bar-chart').innerHTML=md.map(m=>{
     const n=netoMes(m),c=comMes(m);
-    const hN=Math.round((n/maxN)*100);
-    const hC=c>0?Math.round((c/maxN)*100):0;
-    return`<div class="bar-col">
-      <div class="bar-val">${fmts(n)}</div>
-      <div style="display:flex;align-items:flex-end;gap:2px;width:100%;height:100px">
-        <div class="bar" style="height:${hN}px;background:var(--accent);flex:2"></div>
-        ${hC>0?`<div class="bar" style="height:${hC}px;background:#3E3520;flex:1"></div>`:''}
-      </div>
-      <div class="bar-lbl">${m.substring(0,3)}</div>
-    </div>`;
+    const hN=Math.round((n/maxN)*100),hC=c>0?Math.round((c/maxN)*100):0;
+    return`<div class="bar-col"><div class="bar-val">${fmts(n)}</div><div style="display:flex;align-items:flex-end;gap:2px;width:100%;height:100px"><div class="bar" style="height:${hN}px;background:var(--accent);flex:2"></div>${hC>0?`<div class="bar" style="height:${hC}px;background:var(--accentdim);flex:1"></div>`:''}</div><div class="bar-lbl">${m.substring(0,3)}</div></div>`;
   }).join('');
-
-  // Top farmacias
-  const byF={};
-  pedidos.forEach(p=>{byF[p.farmacia]=(byF[p.farmacia]||0)+(p.neto||0)});
+  const byF={};pedidos.forEach(p=>{byF[p.farmacia]=(byF[p.farmacia]||0)+(p.neto||0)});
   const top=Object.entries(byF).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const maxF=top[0]?top[0][1]:1;
-  document.getElementById('top-farm').innerHTML=top.map(([f,n])=>`
-    <div class="top-item">
-      <div class="top-item-head"><span class="top-item-name">${f}</span><span class="top-item-val">${fmt(n)}€</span></div>
-      <div class="top-bar"><div class="top-bar-fill" style="width:${Math.round(n/maxF*100)}%"></div></div>
-    </div>`).join('');
-
-  // Comparativa
-  const items=[['Bruto',brutoCur,brutoPrev],['Comisión Saura',comMes(last),comMes(prev)],['Neto Stickies',netoCur,netoPrev]];
-  document.getElementById('comparativa').innerHTML=`
-    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">${prev} → ${last}</div>
-    <div class="compare-grid">${items.map(([l,c,p])=>{
-      const d=c-p,pv=pct(c,p);
-      return`<div class="cmp">
-        <div class="cmp-lbl">${l}</div>
-        <div class="cmp-val">${fmts(c)}€</div>
-        <div class="cmp-delta ${cls(d)}">${arrow(d)} ${Math.abs(pv).toFixed(0)}% vs ${prev}</div>
-      </div>`;
-    }).join('')}</div>`;
+  const mxF=top[0]?top[0][1]:1;
+  document.getElementById('top-farm').innerHTML=top.map(([f,n])=>`<div class="top-item"><div class="top-item-head"><span class="top-item-name">${f}</span><span class="top-item-val">${fmt(n)}€</span></div><div class="top-bar"><div class="top-bar-fill" style="width:${Math.round(n/mxF*100)}%"></div></div></div>`).join('');
+  const its=[['Bruto',bc,bp],['Comisión Saura',comMes(last),comMes(prev)],['Neto Stickies',nc,np]];
+  document.getElementById('comparativa').innerHTML=`<div style="font-size:12px;color:var(--muted);margin-bottom:8px">${prev} → ${last}</div><div class="compare-grid">${its.map(([l,c,p])=>{const d=c-p,pv=pct(c,p);return`<div class="cmp"><div class="cmp-lbl">${l}</div><div class="cmp-val">${fmts(c)}€</div><div class="cmp-delta ${cls(d)}">${arrow(d)} ${Math.abs(pv).toFixed(0)}% vs ${prev}</div></div>`;}).join('')}</div>`;
 }
 
-// PEDIDOS
 function renderPedidos(){
   const q=document.getElementById('sp').value.toLowerCase();
   const mes=document.getElementById('sm').value;
@@ -432,81 +320,24 @@ function renderPedidos(){
     return true;
   });
   const bc=v=>v==='SI'?'b-si':v==='NO ENTREGADO'?'b-noent':'b-no';
-  document.getElementById('tabla-pedidos').innerHTML=rows.length===0
-    ?'<div class="empty">Sin resultados</div>'
-    :`<table><thead><tr>
-        <th style="width:8%">Factura</th><th style="width:22%">Farmacia</th><th style="width:9%">Mes</th>
-        <th style="width:10%">Bruto</th><th style="width:10%">Sin IVA</th><th style="width:10%">Com. Saura</th>
-        <th style="width:10%">Neto</th><th style="width:9%">Pagado</th><th style="width:7%">Env.</th><th style="width:5%"></th>
-      </tr></thead><tbody>${rows.map(p=>`
-      <tr class="row" onclick="openPanel('pedido',${p.id})">
-        <td style="color:var(--muted)">${p.factura||'—'}</td>
-        <td><strong>${p.farmacia}</strong></td>
-        <td style="color:var(--muted)">${(p.mes||'').substring(0,3)}</td>
-        <td>${fmt(p.bruto)}€</td>
-        <td>${p.siniva?fmt(p.siniva)+'€':'—'}</td>
-        <td style="color:${p.comision>0?'var(--orange)':'var(--muted)'}">${p.comision>0?fmt(p.comision)+'€':'—'}</td>
-        <td style="font-weight:600;color:var(--accent)">${fmt(p.neto)}€</td>
-        <td><span class="badge ${bc(p.pagado)}">${p.pagado}</span></td>
-        <td><span class="badge ${p.enviado==='SI'?'b-si':'b-no'}">${p.enviado}</span></td>
-        <td><button class="btn sm" onclick="event.stopPropagation();openModal('pedido',${p.id})">✏️</button></td>
-      </tr>`).join('')}</tbody></table>`;
+  document.getElementById('tabla-pedidos').innerHTML=rows.length===0?'<div class="empty">Sin resultados</div>'
+    :`<table><thead><tr><th style="width:8%">Factura</th><th style="width:22%">Farmacia</th><th style="width:9%">Mes</th><th style="width:10%">Bruto</th><th style="width:10%">Sin IVA</th><th style="width:10%">Com. Saura</th><th style="width:10%">Neto</th><th style="width:9%">Pagado</th><th style="width:7%">Env.</th><th style="width:5%"></th></tr></thead><tbody>${rows.map(p=>`<tr class="row" onclick="openPanel('pedido',${p.id})"><td style="color:var(--muted)">${p.factura||'—'}</td><td><strong>${p.farmacia}</strong></td><td style="color:var(--muted)">${(p.mes||'').substring(0,3)}</td><td>${fmt(p.bruto)}€</td><td>${p.siniva?fmt(p.siniva)+'€':'—'}</td><td style="color:${p.comision>0?'var(--orange)':'var(--muted)'}">${p.comision>0?fmt(p.comision)+'€':'—'}</td><td style="font-weight:600;color:var(--accent)">${fmt(p.neto)}€</td><td><span class="badge ${bc(p.pagado)}">${p.pagado}</span></td><td><span class="badge ${p.enviado==='SI'?'b-si':'b-no'}">${p.enviado}</span></td><td><button class="btn sm" onclick="event.stopPropagation();openModal('pedido',${p.id})">✏️</button></td></tr>`).join('')}</tbody></table>`;
 }
 
-// FARMACIAS
 function renderFarmacias(){
   const q=document.getElementById('sf').value.toLowerCase();
   const est=document.getElementById('sfe').value;
-
-  // Agrupar pedidos por farmacia
   const pByF={};
-  pedidos.forEach(p=>{
-    if(!pByF[p.farmacia])pByF[p.farmacia]={count:0,neto:0,bruto:0,pendiente:false};
-    pByF[p.farmacia].count++;
-    pByF[p.farmacia].neto+=(p.neto||0);
-    pByF[p.farmacia].bruto+=(p.bruto||0);
-    if(p.pagado!=='SI')pByF[p.farmacia].pendiente=true;
-  });
-
-  // Farmacias registradas en CRM
-  let rows=farmacias.filter(f=>{
-    if(q&&!f.nombre.toLowerCase().includes(q)&&!(f.ciudad||'').toLowerCase().includes(q))return false;
-    if(est&&f.estado!==est)return false;
-    return true;
-  });
-
-  // Añadir farmacias de pedidos que no están en CRM
+  pedidos.forEach(p=>{if(!pByF[p.farmacia])pByF[p.farmacia]={count:0,neto:0,bruto:0,pendiente:false};pByF[p.farmacia].count++;pByF[p.farmacia].neto+=(p.neto||0);pByF[p.farmacia].bruto+=(p.bruto||0);if(p.pagado!=='SI')pByF[p.farmacia].pendiente=true;});
+  let rows=farmacias.filter(f=>{if(q&&!f.nombre.toLowerCase().includes(q)&&!(f.ciudad||'').toLowerCase().includes(q))return false;if(est&&f.estado!==est)return false;return true;});
   const enCRM=new Set(farmacias.map(f=>f.nombre));
-  Object.keys(pByF).forEach(n=>{
-    if(!enCRM.has(n)&&(!q||n.toLowerCase().includes(q)))
-      rows.push({id:null,nombre:n,ciudad:'',estado:'Activo',notas:''});
-  });
-
+  Object.keys(pByF).forEach(n=>{if(!enCRM.has(n)&&(!q||n.toLowerCase().includes(q)))rows.push({id:null,nombre:n,ciudad:'',estado:'Activo',notas:''});});
   document.getElementById('farm-count').textContent=`${rows.length} farmacias`;
   const bc=e=>({Lead:'b-lead',Contactado:'b-contactado',Negociando:'b-negociando',Activo:'b-activo',Perdido:'b-perdido',Distribuidor:'b-distribuidor'}[e]||'b-lead');
-
-  document.getElementById('tabla-farmacias').innerHTML=rows.length===0
-    ?'<div class="empty">Sin resultados</div>'
-    :`<table><thead><tr>
-        <th style="width:26%">Farmacia</th><th style="width:12%">Ciudad</th><th style="width:10%">Estado</th>
-        <th style="width:8%">Pedidos</th><th style="width:12%">Total bruto</th><th style="width:12%">Total neto</th>
-        <th style="width:10%">Pago</th><th style="width:10%">Notas</th>
-      </tr></thead><tbody>${rows.sort((a,b)=>(pByF[b.nombre]?.neto||0)-(pByF[a.nombre]?.neto||0)).map(f=>{
-        const d=pByF[f.nombre]||{count:0,neto:0,bruto:0,pendiente:false};
-        return`<tr class="row" onclick="openPanel('farmacia','${f.nombre.replace(/'/g,"\\'")}')">
-          <td><strong>${f.nombre}</strong></td>
-          <td style="color:var(--muted)">${f.ciudad||'—'}</td>
-          <td><span class="badge ${bc(f.estado)}">${f.estado||'—'}</span></td>
-          <td style="color:var(--muted)">${d.count}</td>
-          <td>${fmt(d.bruto)}€</td>
-          <td style="font-weight:600;color:var(--accent)">${fmt(d.neto)}€</td>
-          <td><span class="badge ${d.pendiente?'b-no':'b-si'}">${d.pendiente?'Pendiente':'Al día'}</span></td>
-          <td style="color:var(--muted);font-size:11px">${f.notas?'✓ Notas':'—'}</td>
-        </tr>`;
-      }).join('')}</tbody></table>`;
+  document.getElementById('tabla-farmacias').innerHTML=rows.length===0?'<div class="empty">Sin resultados</div>'
+    :`<table><thead><tr><th style="width:26%">Farmacia</th><th style="width:12%">Ciudad</th><th style="width:10%">Estado</th><th style="width:8%">Pedidos</th><th style="width:12%">Total bruto</th><th style="width:12%">Total neto</th><th style="width:10%">Pago</th><th style="width:10%">Notas</th></tr></thead><tbody>${rows.sort((a,b)=>(pByF[b.nombre]?.neto||0)-(pByF[a.nombre]?.neto||0)).map(f=>{const d=pByF[f.nombre]||{count:0,neto:0,bruto:0,pendiente:false};return`<tr class="row" onclick="openPanel('farmacia','${f.nombre.replace(/'/g,"\\'")}')"><td><strong>${f.nombre}</strong></td><td style="color:var(--muted)">${f.ciudad||'—'}</td><td><span class="badge ${bc(f.estado)}">${f.estado||'—'}</span></td><td style="color:var(--muted)">${d.count}</td><td>${fmt(d.bruto)}€</td><td style="font-weight:600;color:var(--accent)">${fmt(d.neto)}€</td><td><span class="badge ${d.pendiente?'b-no':'b-si'}">${d.pendiente?'Pendiente':'Al día'}</span></td><td style="color:var(--muted);font-size:11px">${f.notas?'✓ Notas':'—'}</td></tr>`;}).join('')}</tbody></table>`;
 }
 
-// COMERCIALES
 function renderComerciales(){
   if(!comerciales.length){document.getElementById('lista-comerciales').innerHTML='<div class="empty">No hay comerciales registrados</div>';return;}
   document.getElementById('lista-comerciales').innerHTML=comerciales.map(c=>{
@@ -514,157 +345,42 @@ function renderComerciales(){
     const totalCom=cp.reduce((s,p)=>s+(p.comision||0),0);
     const pagadas=cp.filter(p=>p.pagado==='SI').length;
     const mesesConCom=[...new Set(cp.map(p=>p.mes))].sort((a,b)=>MESES.indexOf(a)-MESES.indexOf(b));
-    return`<div class="com-card">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="com-avatar">${c.nombre.charAt(0).toUpperCase()}</div>
-        <div style="flex:1">
-          <div style="font-size:16px;font-weight:600">${c.nombre}</div>
-          <div style="font-size:12px;color:var(--muted)">Comercial externo · Comisión por venta</div>
-        </div>
-        <span class="badge ${c.activo?'b-si':'b-no'}">${c.activo?'Activo':'Inactivo'}</span>
-        <button class="btn sm" onclick="openModal('comercial',${c.id})">✏️ Editar</button>
-      </div>
-      <div class="com-stats">
-        <div class="cs"><div class="cs-val" style="color:var(--accent)">${fmt(totalCom)}€</div><div class="cs-lbl">Total comisiones</div></div>
-        <div class="cs"><div class="cs-val">${cp.length}</div><div class="cs-lbl">Ventas con com.</div></div>
-        <div class="cs"><div class="cs-val">${pagadas}/${cp.length}</div><div class="cs-lbl">Com. pagadas</div></div>
-      </div>
-      ${mesesConCom.length?`<div style="margin-top:14px">
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Detalle mensual</div>
-        ${mesesConCom.map(m=>{
-          const mp=pedidos.filter(p=>p.mes===m&&p.comision>0);
-          const mc=mp.reduce((s,p)=>s+(p.comision||0),0);
-          const mpag=mp.filter(p=>p.pagado==='SI').length;
-          return`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
-            <span style="color:var(--muted)">${m.substring(0,3)}</span>
-            <span>${mp.length} ventas</span>
-            <span style="font-weight:600">${fmt(mc)}€</span>
-            <span class="badge ${mpag===mp.length?'b-si':'b-noent'}">${mpag===mp.length?'Pagado':'Parcial'}</span>
-          </div>`;
-        }).join('')}
-      </div>`:''}
-      ${c.notas?`<div style="margin-top:12px;font-size:12px;color:var(--muted)">${c.notas}</div>`:''}
-    </div>`;
+    return`<div class="com-card"><div style="display:flex;align-items:center;gap:12px"><div class="com-avatar">${c.nombre.charAt(0).toUpperCase()}</div><div style="flex:1"><div style="font-size:16px;font-weight:600">${c.nombre}</div><div style="font-size:12px;color:var(--muted)">Comercial externo · Comisión por venta</div></div><span class="badge ${c.activo?'b-si':'b-no'}">${c.activo?'Activo':'Inactivo'}</span><button class="btn sm" onclick="openModal('comercial',${c.id})">✏️ Editar</button></div><div class="com-stats"><div class="cs"><div class="cs-val" style="color:var(--accent)">${fmt(totalCom)}€</div><div class="cs-lbl">Total comisiones</div></div><div class="cs"><div class="cs-val">${cp.length}</div><div class="cs-lbl">Ventas con com.</div></div><div class="cs"><div class="cs-val">${pagadas}/${cp.length}</div><div class="cs-lbl">Com. pagadas</div></div></div>${mesesConCom.length?`<div style="margin-top:14px"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Detalle mensual</div>${mesesConCom.map(m=>{const mp=pedidos.filter(p=>p.mes===m&&p.comision>0);const mc=mp.reduce((s,p)=>s+(p.comision||0),0);const mpag=mp.filter(p=>p.pagado==='SI').length;return`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--muted)">${m.substring(0,3)}</span><span>${mp.length} ventas</span><span style="font-weight:600">${fmt(mc)}€</span><span class="badge ${mpag===mp.length?'b-si':'b-noent'}">${mpag===mp.length?'Pagado':'Parcial'}</span></div>`;}).join('')}</div>`:''}${c.notas?`<div style="margin-top:12px;font-size:12px;color:var(--muted)">${c.notas}</div>`:''}</div>`;
   }).join('');
 }
 
-// PANELS
-function openPanel(type, id){
+function openPanel(type,id){
   if(type==='pedido'){
-    const p=pedidos.find(x=>x.id===id);
-    if(!p)return;
+    const p=pedidos.find(x=>x.id===id);if(!p)return;
     currentPanel={type,id};
     document.getElementById('pname').textContent=p.farmacia;
     const bc=v=>v==='SI'?'b-si':v==='NO ENTREGADO'?'b-noent':'b-no';
-    document.getElementById('pContent').innerHTML=`
-      <div class="psec">Factura</div>
-      <div class="prow"><span class="pl">Número</span><span class="pv">${p.factura||'—'}</span></div>
-      <div class="prow"><span class="pl">Mes</span><span class="pv">${p.mes}</span></div>
-      <div class="psec">Importes</div>
-      <div class="prow"><span class="pl">Bruto</span><span class="pv">${fmt(p.bruto)}€</span></div>
-      <div class="prow"><span class="pl">Sin IVA</span><span class="pv">${p.siniva?fmt(p.siniva)+'€':'—'}</span></div>
-      <div class="prow"><span class="pl">Comisión Saura</span><span class="pv" style="color:var(--orange)">${p.comision>0?fmt(p.comision)+'€':'—'}</span></div>
-      <div class="prow"><span class="pl">Neto Stickies</span><span class="pv" style="color:var(--accent);font-size:16px">${fmt(p.neto)}€</span></div>
-      <div class="psec">Estado</div>
-      <div class="prow"><span class="pl">Pagado</span><span class="pv"><span class="badge ${bc(p.pagado)}">${p.pagado}</span></span></div>
-      <div class="prow"><span class="pl">Enviado</span><span class="pv"><span class="badge ${p.enviado==='SI'?'b-si':'b-no'}">${p.enviado}</span></span></div>
-      ${p.notas?`<div class="psec">Notas</div><div class="notes-box">${p.notas}</div>`:''}
-      <div style="display:flex;gap:8px;margin-top:1.25rem">
-        <button class="btn" style="flex:1" onclick="closePanel();openModal('pedido',${p.id})">✏️ Editar</button>
-        <button class="btn" style="flex:1;color:var(--red)" onclick="deletePedido(${p.id})">🗑 Eliminar</button>
-      </div>`;
+    document.getElementById('pContent').innerHTML=`<div class="psec">Factura</div><div class="prow"><span class="pl">Número</span><span class="pv">${p.factura||'—'}</span></div><div class="prow"><span class="pl">Mes</span><span class="pv">${p.mes}</span></div><div class="psec">Importes</div><div class="prow"><span class="pl">Bruto</span><span class="pv">${fmt(p.bruto)}€</span></div><div class="prow"><span class="pl">Sin IVA</span><span class="pv">${p.siniva?fmt(p.siniva)+'€':'—'}</span></div><div class="prow"><span class="pl">Comisión Saura</span><span class="pv" style="color:var(--orange)">${p.comision>0?fmt(p.comision)+'€':'—'}</span></div><div class="prow"><span class="pl">Neto Stickies</span><span class="pv" style="color:var(--accent);font-size:16px">${fmt(p.neto)}€</span></div><div class="psec">Estado</div><div class="prow"><span class="pl">Pagado</span><span class="pv"><span class="badge ${bc(p.pagado)}">${p.pagado}</span></span></div><div class="prow"><span class="pl">Enviado</span><span class="pv"><span class="badge ${p.enviado==='SI'?'b-si':'b-no'}">${p.enviado}</span></span></div>${p.notas?`<div class="psec">Notas</div><div class="notes-box">${p.notas}</div>`:''}<div style="display:flex;gap:8px;margin-top:1.25rem"><button class="btn" style="flex:1" onclick="closePanel();openModal('pedido',${p.id})">✏️ Editar</button><button class="btn" style="flex:1;color:var(--red)" onclick="deletePedido(${p.id})">🗑 Eliminar</button></div>`;
   } else if(type==='farmacia'){
     const nombre=id;
     const f=farmacias.find(x=>x.nombre===nombre)||{nombre,estado:'Activo',notas:''};
     const ps=pedidos.filter(p=>p.farmacia===nombre);
     currentPanel={type,id:nombre};
     document.getElementById('pname').textContent=nombre;
-    document.getElementById('pContent').innerHTML=`
-      <div class="psec">Resumen</div>
-      <div class="prow"><span class="pl">Pedidos</span><span class="pv">${ps.length}</span></div>
-      <div class="prow"><span class="pl">Total bruto</span><span class="pv">${fmt(ps.reduce((s,p)=>s+(p.bruto||0),0))}€</span></div>
-      <div class="prow"><span class="pl">Total neto</span><span class="pv" style="color:var(--accent)">${fmt(ps.reduce((s,p)=>s+(p.neto||0),0))}€</span></div>
-      <div class="prow"><span class="pl">Ciudad</span><span class="pv">${f.ciudad||'—'}</span></div>
-      <div class="prow"><span class="pl">Contacto</span><span class="pv">${f.contacto||'—'}</span></div>
-      <div class="prow"><span class="pl">Teléfono</span><span class="pv">${f.telefono||'—'}</span></div>
-      <div class="psec">Historial de pedidos</div>
-      ${ps.map(p=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
-        <span style="color:var(--muted)">${(p.mes||'').substring(0,3)} · ${p.factura||'—'}</span>
-        <span style="font-weight:600">${fmt(p.neto)}€</span>
-        <span class="badge ${p.pagado==='SI'?'b-si':'b-no'}">${p.pagado}</span>
-      </div>`).join('')}
-      <div class="psec">Notas de visita</div>
-      <div class="notes-box">${f.notas||'Sin notas. Añade observaciones sobre esta farmacia.'}</div>
-      <div style="margin-top:1.25rem">
-        <button class="btn accent" style="width:100%" onclick="closePanel();openModal('farmacia','${nombre.replace(/'/g,"\\'")}')">✏️ Editar / Añadir notas</button>
-      </div>`;
+    document.getElementById('pContent').innerHTML=`<div class="psec">Resumen</div><div class="prow"><span class="pl">Pedidos</span><span class="pv">${ps.length}</span></div><div class="prow"><span class="pl">Total bruto</span><span class="pv">${fmt(ps.reduce((s,p)=>s+(p.bruto||0),0))}€</span></div><div class="prow"><span class="pl">Total neto</span><span class="pv" style="color:var(--accent)">${fmt(ps.reduce((s,p)=>s+(p.neto||0),0))}€</span></div><div class="prow"><span class="pl">Ciudad</span><span class="pv">${f.ciudad||'—'}</span></div><div class="prow"><span class="pl">Contacto</span><span class="pv">${f.contacto||'—'}</span></div><div class="psec">Historial de pedidos</div>${ps.map(p=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--muted)">${(p.mes||'').substring(0,3)} · ${p.factura||'—'}</span><span style="font-weight:600">${fmt(p.neto)}€</span><span class="badge ${p.pagado==='SI'?'b-si':'b-no'}">${p.pagado}</span></div>`).join('')}<div class="psec">Notas de visita</div><div class="notes-box">${f.notas||'Sin notas. Añade observaciones sobre esta farmacia.'}</div><div style="margin-top:1.25rem"><button class="btn accent" style="width:100%" onclick="closePanel();openModal('farmacia','${nombre.replace(/'/g,"\\'")}')">✏️ Editar / Añadir notas</button></div>`;
   }
   document.getElementById('panelBg').classList.add('open');
   document.getElementById('sidePanel').classList.add('open');
 }
-function closePanel(){
-  document.getElementById('panelBg').classList.remove('open');
-  document.getElementById('sidePanel').classList.remove('open');
-  currentPanel=null;
-}
+function closePanel(){document.getElementById('panelBg').classList.remove('open');document.getElementById('sidePanel').classList.remove('open');currentPanel=null;}
 
-// MODALES
-function openModal(type, id=null){
-  modalType=type; editId=id;
-  const d=id&&type==='pedido'?pedidos.find(x=>x.id===id):
-           id&&type==='farmacia'?farmacias.find(x=>x.nombre===id)||{nombre:id}:
-           id&&type==='comercial'?comerciales.find(x=>x.id===id):
-           type==='farmacia'&&typeof id==='string'?{nombre:id}:{};
+function openModal(type,id=null){
+  modalType=type;editId=id;
+  const d=id&&type==='pedido'?pedidos.find(x=>x.id===id):id&&type==='farmacia'?farmacias.find(x=>x.nombre===id)||{nombre:id}:id&&type==='comercial'?comerciales.find(x=>x.id===id):type==='farmacia'&&typeof id==='string'?{nombre:id}:{};
   if(type==='pedido'){
     document.getElementById('mTitle').textContent=editId?'Editar pedido':'Nuevo pedido';
-    document.getElementById('mBody').innerHTML=`
-      <div class="g2">
-        <div class="fg"><label>Farmacia *</label><input id="mf" value="${d.farmacia||''}"></div>
-        <div class="fg"><label>Nº Factura</label><input id="mfac" value="${d.factura||''}"></div>
-        <div class="fg"><label>Mes</label><select id="mmes">${MESES.map(m=>`<option ${d.mes===m?'selected':''}>${m}</option>`).join('')}</select></div>
-        <div class="fg"><label>Bruto (€)</label><input type="number" id="mb" value="${d.bruto||''}" step="0.01"></div>
-        <div class="fg"><label>Sin IVA (€)</label><input type="number" id="ms" value="${d.siniva||''}" step="0.01"></div>
-        <div class="fg"><label>Comisión Saura (€)</label><input type="number" id="mc" value="${d.comision||''}" step="0.01"></div>
-        <div class="fg"><label>Pagado</label><select id="mpag"><option ${d.pagado==='SI'?'selected':''}>SI</option><option ${d.pagado==='NO'?'selected':''}>NO</option><option ${d.pagado==='NO ENTREGADO'?'selected':''}>NO ENTREGADO</option></select></div>
-        <div class="fg"><label>Enviado</label><select id="menv"><option ${d.enviado==='SI'?'selected':''}>SI</option><option ${d.enviado==='NO'?'selected':''}>NO</option></select></div>
-      </div>
-      <div class="fg"><label>Notas</label><textarea id="mn">${d.notas||''}</textarea></div>`;
+    document.getElementById('mBody').innerHTML=`<div class="g2"><div class="fg"><label>Farmacia *</label><input id="mf" value="${d.farmacia||''}"></div><div class="fg"><label>Nº Factura</label><input id="mfac" value="${d.factura||''}"></div><div class="fg"><label>Mes</label><select id="mmes">${MESES.map(m=>`<option ${d.mes===m?'selected':''}>${m}</option>`).join('')}</select></div><div class="fg"><label>Bruto (€)</label><input type="number" id="mb" value="${d.bruto||''}" step="0.01"></div><div class="fg"><label>Sin IVA (€)</label><input type="number" id="ms" value="${d.siniva||''}" step="0.01"></div><div class="fg"><label>Comisión Saura (€)</label><input type="number" id="mc" value="${d.comision||''}" step="0.01"></div><div class="fg"><label>Pagado</label><select id="mpag"><option ${d.pagado==='SI'?'selected':''}>SI</option><option ${d.pagado==='NO'?'selected':''}>NO</option><option ${d.pagado==='NO ENTREGADO'?'selected':''}>NO ENTREGADO</option></select></div><div class="fg"><label>Enviado</label><select id="menv"><option ${d.enviado==='SI'?'selected':''}>SI</option><option ${d.enviado==='NO'?'selected':''}>NO</option></select></div></div><div class="fg"><label>Notas</label><textarea id="mn">${d.notas||''}</textarea></div>`;
   } else if(type==='farmacia'){
     document.getElementById('mTitle').textContent=editId?'Editar farmacia':'Nueva farmacia';
-    document.getElementById('mBody').innerHTML=`
-      <div class="g2">
-        <div class="fg"><label>Nombre *</label><input id="mfn" value="${d.nombre||''}"></div>
-        <div class="fg"><label>Ciudad</label><input id="mfc" value="${d.ciudad||''}"></div>
-        <div class="fg"><label>Contacto</label><input id="mfco" value="${d.contacto||''}"></div>
-        <div class="fg"><label>Teléfono</label><input id="mft" value="${d.telefono||''}"></div>
-        <div class="fg"><label>Email</label><input id="mfe2" value="${d.email||''}"></div>
-        <div class="fg"><label>Estado</label><select id="mfest">
-          ${['Lead','Contactado','Negociando','Activo','Perdido','Distribuidor'].map(e=>`<option ${d.estado===e?'selected':''}>${e}</option>`).join('')}
-        </select></div>
-        <div class="fg"><label>Coste materiales (€)</label><input type="number" id="mfmat" value="${d.coste_materiales||''}" step="0.01"></div>
-        <div class="fg"><label>Última visita</label><input type="date" id="mfv" value="${d.ultima_visita||''}"></div>
-      </div>
-      <div class="fg"><label>Materiales entregados</label>
-        <div class="check-grid">
-          <label class="chk"><input type="checkbox" id="chv" ${d.vinilo?'checked':''}> Vinilo escaparate</label>
-          <label class="chk"><input type="checkbox" id="chi" ${d.infografia?'checked':''}> Infografía impresa</label>
-          <label class="chk"><input type="checkbox" id="chvi" ${d.video?'checked':''}> Vídeo colaborativo</label>
-          <label class="chk"><input type="checkbox" id="chr" ${d.rrss?'checked':''}> Imágenes/vídeos RRSS</label>
-          <label class="chk"><input type="checkbox" id="cht" ${d.tarifa?'checked':''}> Tarifa PDF enviada</label>
-          <label class="chk"><input type="checkbox" id="chm" ${d.muestra?'checked':''}> Muestras entregadas</label>
-        </div>
-      </div>
-      <div class="fg"><label>Notas de visita</label><textarea id="mfno">${d.notas||''}</textarea></div>`;
+    document.getElementById('mBody').innerHTML=`<div class="g2"><div class="fg"><label>Nombre *</label><input id="mfn" value="${d.nombre||''}"></div><div class="fg"><label>Ciudad</label><input id="mfc" value="${d.ciudad||''}"></div><div class="fg"><label>Contacto</label><input id="mfco" value="${d.contacto||''}"></div><div class="fg"><label>Teléfono</label><input id="mft" value="${d.telefono||''}"></div><div class="fg"><label>Email</label><input id="mfe2" value="${d.email||''}"></div><div class="fg"><label>Estado</label><select id="mfest">${['Lead','Contactado','Negociando','Activo','Perdido','Distribuidor'].map(e=>`<option ${d.estado===e?'selected':''}>${e}</option>`).join('')}</select></div><div class="fg"><label>Coste materiales (€)</label><input type="number" id="mfmat" value="${d.coste_materiales||''}" step="0.01"></div><div class="fg"><label>Última visita</label><input type="date" id="mfv" value="${d.ultima_visita||''}"></div></div><div class="fg"><label>Materiales entregados</label><div class="check-grid"><label class="chk"><input type="checkbox" id="chv" ${d.vinilo?'checked':''}> Vinilo escaparate</label><label class="chk"><input type="checkbox" id="chi" ${d.infografia?'checked':''}> Infografía impresa</label><label class="chk"><input type="checkbox" id="chvi" ${d.video?'checked':''}> Vídeo colaborativo</label><label class="chk"><input type="checkbox" id="chr" ${d.rrss?'checked':''}> Imágenes/vídeos RRSS</label><label class="chk"><input type="checkbox" id="cht" ${d.tarifa?'checked':''}> Tarifa PDF enviada</label><label class="chk"><input type="checkbox" id="chm" ${d.muestra?'checked':''}> Muestras entregadas</label></div></div><div class="fg"><label>Notas de visita</label><textarea id="mfno">${d.notas||''}</textarea></div>`;
   } else if(type==='comercial'){
     document.getElementById('mTitle').textContent=editId?'Editar comercial':'Nuevo comercial';
-    document.getElementById('mBody').innerHTML=`
-      <div class="g2">
-        <div class="fg"><label>Nombre *</label><input id="mcn" value="${d.nombre||''}"></div>
-        <div class="fg"><label>Email</label><input id="mce" value="${d.email||''}"></div>
-        <div class="fg"><label>Teléfono</label><input id="mct" value="${d.telefono||''}"></div>
-        <div class="fg"><label>Estado</label><select id="mca"><option value="true" ${d.activo!==false?'selected':''}>Activo</option><option value="false" ${d.activo===false?'selected':''}>Inactivo</option></select></div>
-      </div>
-      <div class="fg"><label>Notas</label><textarea id="mcno">${d.notas||''}</textarea></div>`;
+    document.getElementById('mBody').innerHTML=`<div class="g2"><div class="fg"><label>Nombre *</label><input id="mcn" value="${d.nombre||''}"></div><div class="fg"><label>Email</label><input id="mce" value="${d.email||''}"></div><div class="fg"><label>Teléfono</label><input id="mct" value="${d.telefono||''}"></div><div class="fg"><label>Estado</label><select id="mca"><option value="true" ${d.activo!==false?'selected':''}>Activo</option><option value="false" ${d.activo===false?'selected':''}>Inactivo</option></select></div></div><div class="fg"><label>Notas</label><textarea id="mcno">${d.notas||''}</textarea></div>`;
   }
   document.getElementById('modalBg').classList.add('open');
 }
@@ -674,74 +390,27 @@ async function saveModal(){
   if(modalType==='pedido'){
     const farm=document.getElementById('mf').value.trim();
     if(!farm){toast('El nombre de la farmacia es obligatorio','err');return;}
-    const siniva=parseFloat(document.getElementById('ms').value)||0;
-    const com=parseFloat(document.getElementById('mc').value)||0;
-    const rec={
-      mes:document.getElementById('mmes').value,
-      factura:document.getElementById('mfac').value.trim(),
-      farmacia:farm,
-      bruto:parseFloat(document.getElementById('mb').value)||0,
-      siniva,comision:com,neto:siniva-com,
-      pagado:document.getElementById('mpag').value,
-      enviado:document.getElementById('menv').value,
-      notas:document.getElementById('mn').value.trim()
-    };
-    if(editId){
-      const{error}=await sb.from('pedidos').update(rec).eq('id',editId);
-      if(error){toast('Error al guardar','err');return;}
-    } else {
-      const{error}=await sb.from('pedidos').insert(rec);
-      if(error){toast('Error al guardar','err');return;}
-    }
-    await loadPedidos();renderPedidos();renderDashboard();renderFarmacias();
-    toast('Pedido guardado ✓','ok');
+    const si=parseFloat(document.getElementById('ms').value)||0;
+    const co=parseFloat(document.getElementById('mc').value)||0;
+    const rec={mes:document.getElementById('mmes').value,factura:document.getElementById('mfac').value.trim(),farmacia:farm,bruto:parseFloat(document.getElementById('mb').value)||0,siniva:si,comision:co,neto:si-co,pagado:document.getElementById('mpag').value,enviado:document.getElementById('menv').value,notas:document.getElementById('mn').value.trim()};
+    if(editId){const{error}=await sb.from('pedidos').update(rec).eq('id',editId);if(error){toast('Error al guardar','err');return;}}
+    else{const{error}=await sb.from('pedidos').insert(rec);if(error){toast('Error al guardar','err');return;}}
+    await loadPedidos();renderPedidos();renderDashboard();renderFarmacias();toast('Pedido guardado ✓','ok');
   } else if(modalType==='farmacia'){
     const nombre=document.getElementById('mfn').value.trim();
     if(!nombre){toast('El nombre es obligatorio','err');return;}
-    const rec={
-      nombre,ciudad:document.getElementById('mfc').value.trim(),
-      contacto:document.getElementById('mfco').value.trim(),
-      telefono:document.getElementById('mft').value.trim(),
-      email:document.getElementById('mfe2').value.trim(),
-      estado:document.getElementById('mfest').value,
-      coste_materiales:parseFloat(document.getElementById('mfmat').value)||0,
-      ultima_visita:document.getElementById('mfv').value||null,
-      vinilo:document.getElementById('chv').checked,
-      infografia:document.getElementById('chi').checked,
-      video:document.getElementById('chvi').checked,
-      rrss:document.getElementById('chr').checked,
-      tarifa:document.getElementById('cht').checked,
-      muestra:document.getElementById('chm').checked,
-      notas:document.getElementById('mfno').value.trim()
-    };
+    const rec={nombre,ciudad:document.getElementById('mfc').value.trim(),contacto:document.getElementById('mfco').value.trim(),telefono:document.getElementById('mft').value.trim(),email:document.getElementById('mfe2').value.trim(),estado:document.getElementById('mfest').value,coste_materiales:parseFloat(document.getElementById('mfmat').value)||0,ultima_visita:document.getElementById('mfv').value||null,vinilo:document.getElementById('chv').checked,infografia:document.getElementById('chi').checked,video:document.getElementById('chvi').checked,rrss:document.getElementById('chr').checked,tarifa:document.getElementById('cht').checked,muestra:document.getElementById('chm').checked,notas:document.getElementById('mfno').value.trim()};
     const exist=farmacias.find(f=>f.nombre===nombre);
-    if(exist){
-      const{error}=await sb.from('farmacias').update(rec).eq('id',exist.id);
-      if(error){toast('Error al guardar','err');return;}
-    } else {
-      const{error}=await sb.from('farmacias').insert(rec);
-      if(error){toast('Error al guardar','err');return;}
-    }
-    await loadFarmacias();renderFarmacias();
-    toast('Farmacia guardada ✓','ok');
+    if(exist){const{error}=await sb.from('farmacias').update(rec).eq('id',exist.id);if(error){toast('Error al guardar','err');return;}}
+    else{const{error}=await sb.from('farmacias').insert(rec);if(error){toast('Error al guardar','err');return;}}
+    await loadFarmacias();renderFarmacias();toast('Farmacia guardada ✓','ok');
   } else if(modalType==='comercial'){
     const nombre=document.getElementById('mcn').value.trim();
     if(!nombre){toast('El nombre es obligatorio','err');return;}
-    const rec={
-      nombre,email:document.getElementById('mce').value.trim(),
-      telefono:document.getElementById('mct').value.trim(),
-      activo:document.getElementById('mca').value==='true',
-      notas:document.getElementById('mcno').value.trim()
-    };
-    if(editId){
-      const{error}=await sb.from('comerciales').update(rec).eq('id',editId);
-      if(error){toast('Error al guardar','err');return;}
-    } else {
-      const{error}=await sb.from('comerciales').insert(rec);
-      if(error){toast('Error al guardar','err');return;}
-    }
-    await loadComerciales();renderComerciales();
-    toast('Comercial guardado ✓','ok');
+    const rec={nombre,email:document.getElementById('mce').value.trim(),telefono:document.getElementById('mct').value.trim(),activo:document.getElementById('mca').value==='true',notas:document.getElementById('mcno').value.trim()};
+    if(editId){const{error}=await sb.from('comerciales').update(rec).eq('id',editId);if(error){toast('Error al guardar','err');return;}}
+    else{const{error}=await sb.from('comerciales').insert(rec);if(error){toast('Error al guardar','err');return;}}
+    await loadComerciales();renderComerciales();toast('Comercial guardado ✓','ok');
   }
   closeModal();
 }
@@ -750,16 +419,14 @@ async function deletePedido(id){
   if(!confirm('¿Eliminar este pedido?'))return;
   const{error}=await sb.from('pedidos').delete().eq('id',id);
   if(error){toast('Error al eliminar','err');return;}
-  await loadPedidos();closePanel();renderPedidos();renderDashboard();renderFarmacias();
-  toast('Pedido eliminado','ok');
+  await loadPedidos();closePanel();renderPedidos();renderDashboard();renderFarmacias();toast('Pedido eliminado','ok');
 }
 
 function showView(id,el){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('view-'+id).classList.add('active');
-  el.classList.add('active');
-  closePanel();
+  el.classList.add('active');closePanel();
 }
 
 function toast(msg,type='ok'){
@@ -768,7 +435,6 @@ function toast(msg,type='ok'){
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-// FILTROS
 document.getElementById('sp').addEventListener('input',renderPedidos);
 document.getElementById('sm').addEventListener('change',renderPedidos);
 document.getElementById('spag').addEventListener('change',renderPedidos);
