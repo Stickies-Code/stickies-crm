@@ -369,16 +369,16 @@ const COSTES={case:2.00,sobre:0.70};
 
 // CCAA por farmacia conocida
 const CCAA_MAP={
-  'carabanchel':'Madrid','gran vía':'Madrid','gran via':'Madrid',
+  'carabanchel':'Madrid','gran vía':'Comunitat Valenciana','gran via':'Comunitat Valenciana',
   'congosto':'Madrid','vallecas':'Madrid',
-  'barcella':'Cataluña','ari castellón':'Comunitat Valenciana','castellón':'Comunitat Valenciana',
+  'barcella':'Comunitat Valenciana','ari castellón':'Comunitat Valenciana','castellón':'Comunitat Valenciana',
   'dalia':'Madrid','reino de valencia':'Comunitat Valenciana',
   'paula traver':'Comunitat Valenciana','san marcelino':'Comunitat Valenciana',
   'ribarroja':'Comunitat Valenciana','cecilia':'Comunitat Valenciana',
   't. alfonso':'Comunitat Valenciana','tres creus':'Comunitat Valenciana',
   'buenavista':'Madrid','parque campanar':'Comunitat Valenciana',
   'españa':'Comunitat Valenciana','parque central':'Comunitat Valenciana',
-  '40 avilés':'Asturias','avilés':'Asturias',
+  '40 avilés':'Comunitat Valenciana','avilés':'Comunitat Valenciana',
   'tavernes':'Comunitat Valenciana','daniel':'Comunitat Valenciana',
   'luna':'Comunitat Valenciana','julio tudela':'Comunitat Valenciana',
   'red farma':'Comunitat Valenciana','ferrer lazaro':'Comunitat Valenciana',
@@ -389,6 +389,15 @@ function guessCCAA(nombre){
   const n=nombre.toLowerCase();
   for(const[k,v] of Object.entries(CCAA_MAP)){if(n.includes(k))return v;}
   return'—';
+}
+
+function pedidosBadge(farmacia, currentId){
+  const total = pedidos.filter(p=>p.farmacia===farmacia).length;
+  const idx = pedidos.filter(p=>p.farmacia===farmacia).findIndex(p=>p.id===currentId)+1;
+  if(total<=1) return '';
+  const colors=['','#F4A7B9','#A78BFA','#60A5FA','#4ADE80','#FB923C'];
+  const c=colors[Math.min(idx,colors.length-1)];
+  return `<span style="margin-left:6px;display:inline-block;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700;background:${c}22;color:${c};border:1px solid ${c}44">Pedido #${idx}</span>`;
 }
 
 function calcMargen(neto,units,formato){
@@ -628,7 +637,7 @@ function renderPedidos(){
       return`<tr class="row" onclick="openPanel('pedido',${p.id})">
         <td style="color:var(--muted2)">${p.factura||'—'}</td>
         <td style="color:var(--muted2)">${p.fecha||'—'}</td>
-        <td><strong>${p.farmacia}</strong></td>
+        <td><strong>${p.farmacia}</strong>${pedidosBadge(p.farmacia,p.id)}</td>
         <td><span class="ccaa">${ccaa}</span></td>
         <td style="color:var(--muted2)">${(p.mes||'').substring(0,3)}</td>
         <td><span class="badge ${(p.formato||'case')==='case'?'b-case':'b-sobre'}">${(p.formato||'case')==='case'?'Case':'Sobre'}</span></td>
@@ -716,7 +725,8 @@ function renderFarmacias(){
       const d=pByF[f.nombre]||{count:0,neto:0,benef:0,pendiente:false};
       const fc=f.ccaa||guessCCAA(f.nombre);
       return`<tr class="row" onclick="openPanel('farmacia','${f.nombre.replace(/'/g,"\\'")}')">
-        <td><strong>${f.nombre}</strong>${f.notas?'<span style="color:var(--accent);margin-left:4px" title="Tiene notas">●</span>':''}</td>
+        <td><strong>${f.nombre}</strong>${f.notas?'<span style="color:var(--accent);margin-left:4px" title="Tiene notas">●</span>':''}${d.count>1?`<span style="margin-left:6px;display:inline-block;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700;background:rgba(74,222,128,.15);color:var(--green);border:1px solid rgba(74,222,128,.3)">${d.count} pedidos</span>`:''}
+        </td>
         <td style="color:var(--muted2)">${f.ciudad||'—'}</td>
         <td><span class="ccaa">${fc}</span></td>
         <td><span class="badge ${bc(f.estado)}">${f.estado||'—'}</span></td>
