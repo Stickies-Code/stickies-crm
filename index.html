@@ -627,27 +627,50 @@ function renderPedidos(){
 
   document.getElementById('tabla-pedidos').innerHTML=rows.length===0?'<div class="empty-state">Sin resultados para los filtros seleccionados</div>'
     :`<table><thead><tr>
-      <th>Factura</th><th>Fecha</th><th>Farmacia</th><th>CCAA</th><th>Mes</th><th>Formato</th>
-      <th class="col-right">Bruto</th><th class="col-right">Neto</th><th class="col-right">Coste</th>
-      <th class="col-right">Beneficio</th><th class="col-right">Margen</th>
-      <th>Pagado</th><th>Env.</th><th></th>
+      <th>Factura</th><th>Farmacia</th><th>CCAA</th><th>Mes</th><th>Fmt</th>
+      <th class="col-right">Bruto</th>
+      <th class="col-right">Neto</th>
+      <th class="col-right" style="color:var(--orange)">− Saura</th>
+      <th class="col-right" style="color:var(--red)">− Coste</th>
+      <th class="col-right" style="color:var(--green)">Beneficio</th>
+      <th class="col-right">Margen</th>
+      <th>Pagado</th><th>Info</th><th></th>
     </tr></thead><tbody>${rows.map(p=>{
       const{coste,beneficio,pct:mp}=calcMargen(p.neto||0,p.units||30,p.formato||'case');
       const ccaa=guessCCAA(p.farmacia);
+      const tieneComision=p.comision>0;
+      const tieneInfo=p.web||p.historia||p.notas;
       return`<tr class="row" onclick="openPanel('pedido',${p.id})">
-        <td style="color:var(--muted2)">${p.factura||'—'}</td>
-        <td style="color:var(--muted2)">${p.fecha||'—'}</td>
-        <td><strong>${p.farmacia}</strong>${pedidosBadge(p.farmacia,p.id)}</td>
+        <td style="color:var(--muted2);font-size:11px">${p.factura||'—'}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+            <strong>${p.farmacia}</strong>
+            ${pedidosBadge(p.farmacia,p.id)}
+          </div>
+          ${p.fecha?`<div style="font-size:10px;color:var(--muted2);margin-top:1px">${p.fecha}</div>`:''}
+        </td>
         <td><span class="ccaa">${ccaa}</span></td>
         <td style="color:var(--muted2)">${(p.mes||'').substring(0,3)}</td>
         <td><span class="badge ${(p.formato||'case')==='case'?'b-case':'b-sobre'}">${(p.formato||'case')==='case'?'Case':'Sobre'}</span></td>
-        <td class="col-right">${fmt(p.bruto)}€</td>
+        <td class="col-right" style="color:var(--muted2)">${fmt(p.bruto)}€</td>
         <td class="col-right">${fmt(p.neto)}€</td>
+        <td class="col-right">
+          ${tieneComision
+            ?`<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+                <span style="color:var(--orange);font-weight:600">-${fmt(p.comision)}€</span>
+                <span style="font-size:9px;padding:1px 5px;border-radius:8px;background:var(--orangedim);color:var(--orange);font-weight:600">SAURA</span>
+              </div>`
+            :'<span style="color:var(--muted2)">—</span>'}
+        </td>
         <td class="col-right" style="color:var(--red)">-${fmt(coste)}€</td>
-        <td class="col-right" style="color:var(--green);font-weight:700">${fmt(beneficio)}€</td>
+        <td class="col-right">
+          <span style="color:var(--green);font-weight:700">${fmt(beneficio)}€</span>
+        </td>
         <td class="col-right"><span class="margin-pill ${mgClass(p)}">${mp.toFixed(0)}%</span></td>
         <td><span class="badge ${bc(p.pagado)}">${p.pagado}</span></td>
-        <td><span class="badge ${p.enviado==='SI'?'b-si':'b-no'}">${p.enviado}</span></td>
+        <td>
+          ${tieneInfo?`<span style="font-size:10px;color:var(--accent);cursor:pointer" title="${[p.web?'Web: '+p.web:'',p.historia?'Historia: '+p.historia:'',p.notas?'Notas: '+p.notas:''].filter(Boolean).join(' | ')}">ℹ️</span>`:'—'}
+        </td>
         <td><button class="btn sm ghost" onclick="event.stopPropagation();openModal('pedido',${p.id})">✏️</button></td>
       </tr>`;
     }).join('')}</tbody></table>`;
