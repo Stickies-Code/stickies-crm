@@ -450,9 +450,9 @@ async function init(){
   renderAll();
 }
 
-async function loadPedidos(){const{data}=await sb.from('pedidos').select('*').order('id');pedidos=data||[];}
-async function loadFarmacias(){const{data}=await sb.from('farmacias').select('*').order('nombre');farmacias=data||[];}
-async function loadComerciales(){const{data}=await sb.from('comerciales').select('*').order('nombre');comerciales=data||[];}
+async function loadPedidos(){try{const{data}=await sb.from('pedidos').select('*').order('id');pedidos=data||[];}catch(e){pedidos=[];}}
+async function loadFarmacias(){try{const{data}=await sb.from('farmacias').select('*').order('nombre');farmacias=data||[];}catch(e){farmacias=[];}}
+async function loadComerciales(){try{const{data}=await sb.from('comerciales').select('*').order('nombre');comerciales=data||[];}catch(e){comerciales=[]}}
 
 function getMesesConDatos(){
   return[...new Set(pedidos.map(p=>p.mes))].sort((a,b)=>MESES.indexOf(a)-MESES.indexOf(b));
@@ -1150,8 +1150,10 @@ function toast(msg,type='ok'){
 let visitadas=[];
 
 async function loadVisitadas(){
-  const{data}=await sb.from('farmacias_visitadas').select('*').order('id');
-  visitadas=data||[];
+  try{
+    const{data,error}=await sb.from('farmacias_visitadas').select('*').order('id');
+    if(!error) visitadas=data||[];
+  }catch(e){visitadas=[];console.warn('farmacias_visitadas no existe aún');}
 }
 
 function renderVisitadas(){
