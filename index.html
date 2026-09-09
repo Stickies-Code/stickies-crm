@@ -221,6 +221,7 @@ tr.row:hover td{background:var(--accentdim);cursor:pointer}
     <div class="nav-item active" onclick="showView('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
     <div class="nav-item" onclick="showView('pedidos',this)"><span class="nav-icon">🧾</span>Pedidos</div>
     <div class="nav-item" onclick="showView('farmacias',this)"><span class="nav-icon">🏪</span>Farmacias</div>
+    <div class="nav-item" onclick="showView('visitadas',this)"><span class="nav-icon">📍</span>Farmacias Visitadas</div>
     <div class="nav-group-label" style="margin-top:.5rem">Equipo</div>
     <div class="nav-item" onclick="showView('comerciales',this)"><span class="nav-icon">👤</span>Comerciales</div>
   </nav>
@@ -326,6 +327,21 @@ tr.row:hover td{background:var(--accentdim);cursor:pointer}
   <div id="lista-comerciales"></div>
 </div>
 
+<!-- FARMACIAS VISITADAS -->
+<div class="view" id="view-visitadas">
+  <div class="page-header">
+    <div><div class="page-title">Farmacias Visitadas</div><div class="page-sub" id="visitadas-sub">Registro de visitas y contactos</div></div>
+    <button class="btn primary" onclick="openModalVisita()">+ Nueva visita</button>
+  </div>
+  <div class="card">
+    <div class="filter-bar">
+      <input type="text" class="input" id="sv" placeholder="Buscar farmacia o contacto..." style="flex:1;min-width:150px">
+      <button class="btn sm ghost" onclick="document.getElementById('sv').value='';renderVisitadas()">✕ Limpiar</button>
+    </div>
+    <div class="table-wrap" id="tabla-visitadas"></div>
+  </div>
+</div>
+
 </main>
 </div>
 
@@ -427,7 +443,7 @@ function benefMes(m,ps){
 function comMes(m,ps){return(ps||pedidos).filter(p=>p.mes===m).reduce((s,p)=>s+(p.comision||0),0)}
 
 async function init(){
-  await Promise.all([loadPedidos(),loadFarmacias(),loadComerciales()]);
+  await Promise.all([loadPedidos(),loadFarmacias(),loadComerciales(),loadVisitadas()]);
   buildMonthChips();
   buildMonthSelects();
   buildCCAAFilter();
@@ -1044,6 +1060,18 @@ async function saveModal(){
     else{await sb.from('comerciales').insert(rec);}
     await loadComerciales();renderComerciales();toast('Comercial guardado ✓','ok');
   }
+  } else if(modalType==='visita'){
+    const farm=document.getElementById('mv-farm').value.trim();
+    if(!farm){toast('El nombre de la farmacia es obligatorio','err');return;}
+    const rec={
+      farmacia:farm,
+      contacto:document.getElementById('mv-contacto').value.trim(),
+      comentarios:document.getElementById('mv-comentarios').value.trim()
+    };
+    if(editId){await sb.from('farmacias_visitadas').update(rec).eq('id',editId);}
+    else{await sb.from('farmacias_visitadas').insert(rec);}
+    await loadVisitadas();renderVisitadas();toast('Visita guardada ✓','ok');
+  }
   closeModal();
 }
 
@@ -1098,7 +1126,7 @@ function showView(id,el){
 }
 
 function renderAll(){
-  renderDashboard();renderPedidos();renderFarmacias();renderComerciales();
+  renderDashboard();renderPedidos();renderFarmacias();renderComerciales();renderVisitadas();
 }
 
 // LISTENERS
@@ -1110,12 +1138,68 @@ function renderAll(){
   document.getElementById(id)?.addEventListener('input',renderFarmacias);
   document.getElementById(id)?.addEventListener('change',renderFarmacias);
 });
+document.getElementById('sv')?.addEventListener('input',renderVisitadas);
 
 function toast(msg,type='ok'){
   const t=document.getElementById('toast');
   t.textContent=msg;t.className='toast '+type+' show';
   setTimeout(()=>t.classList.remove('show'),3000);
 }
+
+// ─── FARMACIAS VISITADAS ─────────────────────────────────────────
+let visitadas=[];
+
+async function loadVisitadas(){
+  const{data}=await sb.from('farmacias_visitadas').select('*').order('id');
+  visitadas=data||[];
+}
+
+function renderVisitadas(){
+  const q=document.getElementById('sv').value.toLowerCase();
+  const rows=visitadas.filter(v=>
+    !q||v.farmacia.toLowerCase().includes(q)||(v.contacto||'').toLowerCase().includes(q)||(v.comentarios||'').toLowerCase().includes(q)
+  );
+  document.getElementById('visitadas-sub').textContent=`${visitadas.length} farmacias registradas`;
+  document.getElementById('tabla-visitadas').innerHTML=rows.length===0
+    ?'<div class="empty-state">Sin resultados. Añade tu primera visita.</div>'
+    :`<table><thead><tr>
+        <th style="width:30%">Farmacia</th>
+        <th style="width:25%">Contacto</th>
+        <th>Comentarios</th>
+        <th style="width:60px"></th>
+      </tr></thead>
+      <tbody>${rows.map(v=>`
+        <tr class="row" onclick="openModalVisita(${v.id})">
+          <td><strong>${v.farmacia}</strong></td>
+          <td style="color:var(--muted2)">${v.contacto||'—'}</td>
+          <td style="color:var(--muted2);white-space:normal;line-height:1.4">${v.comentarios||'—'}</td>
+          <td>
+            <button class="btn sm ghost" onclick="event.stopPropagation();deleteVisita(${v.id})" title="Eliminar">🗑</button>
+          </td>
+        </tr>`).join('')}
+      </tbody></table>`;
+}
+
+function openModalVisita(id=null){
+  const d=id?visitadas.find(v=>v.id===id):{};
+  modalType='visita';editId=id;
+  document.getElementById('mTitle').textContent=id?'Editar visita':'Nueva farmacia visitada';
+  document.getElementById('mBody').innerHTML=`
+    <div class="form-grid">
+      <div class="fg full"><label>Farmacia *</label><input class="input" id="mv-farm" value="${d.farmacia||''}" placeholder="Nombre de la farmacia"></div>
+      <div class="fg full"><label>Contacto</label><input class="input" id="mv-contacto" value="${d.contacto||''}" placeholder="Nombre del farmacéutico/responsable"></div>
+      <div class="fg full"><label>Comentarios</label><textarea class="input" id="mv-comentarios" placeholder="Observaciones, resultado de la visita, próximos pasos..." style="min-height:120px">${d.comentarios||''}</textarea></div>
+    </div>`;
+  document.getElementById('modalBg').classList.add('open');
+}
+
+async function deleteVisita(id){
+  if(!confirm('¿Eliminar esta visita?'))return;
+  await sb.from('farmacias_visitadas').delete().eq('id',id);
+  await loadVisitadas();renderVisitadas();toast('Eliminado','ok');
+}
+
+// ─────────────────────────────────────────────────────────────────
 
 init();
 </script>
