@@ -177,6 +177,18 @@ tr:hover td{background:rgba(244,167,185,.03)}
 .next-visit-warn{color:var(--orange);font-size:11px}
 .next-visit-late{color:var(--red);font-size:11px}
 .next-visit-none{color:var(--muted);font-size:11px}
+.com-mes-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);margin-bottom:16px;overflow:hidden}
+.com-mes-head{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;background:var(--surface2);border-bottom:1px solid var(--border);cursor:pointer}
+.com-mes-title{font-size:14px;font-weight:700}
+.com-mes-stats{display:flex;gap:16px;font-size:12px}
+.com-mes-stat{display:flex;flex-direction:column;align-items:flex-end}
+.com-mes-stat-lbl{font-size:9px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.com-mes-stat-val{font-weight:700;font-size:14px}
+.liq-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.liq-pend{background:var(--orangedim);color:var(--orange);border:1px solid var(--orange)}
+.liq-pend:hover{background:var(--orange);color:#0C0C10}
+.liq-pag{background:var(--greendim);color:var(--green);border:1px solid var(--green)}
+.warn-nocom{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:6px;background:var(--reddim);color:var(--red);font-size:10px;font-weight:600}
 .loading{display:flex;align-items:center;justify-content:center;height:200px;color:var(--muted);font-size:13px;gap:10px}
 .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -200,6 +212,7 @@ tr:hover td{background:rgba(244,167,185,.03)}
     <div class="nav-item" onclick="showView('pedidos',this)"><span class="nav-icon">🧾</span>Pedidos</div>
     <div class="nav-item" onclick="showView('farmacias',this)"><span class="nav-icon">🏪</span>Farmacias</div>
     <div class="nav-item" onclick="showView('visitadas',this)"><span class="nav-icon">📍</span>Farmacias Visitadas</div>
+    <div class="nav-item" onclick="showView('comisiones',this)"><span class="nav-icon">💸</span>Comisiones</div>
     <div class="nav-group-label" style="margin-top:.5rem">Equipo</div>
     <div class="nav-item" onclick="showView('comerciales',this)"><span class="nav-icon">👤</span>Comerciales</div>
   </nav>
@@ -306,6 +319,20 @@ tr:hover td{background:rgba(244,167,185,.03)}
     </div>
     <div class="table-wrap" id="tabla-visitadas"><div class="loading"><div class="spinner"></div>Cargando...</div></div>
   </div>
+</div>
+
+<!-- COMISIONES -->
+<div class="view" id="view-comisiones">
+  <div class="page-header">
+    <div><div class="page-title">Comisiones</div><div class="page-sub" id="comisiones-sub">Liquidaciones de comerciales</div></div>
+  </div>
+  <div id="comisiones-alerts" style="margin-bottom:1rem"></div>
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:600;color:var(--muted)">Mes:</span>
+    <select class="select" id="com-mes-filter" onchange="renderComisiones()" style="width:160px"><option value="">Todos los meses</option></select>
+    <select class="select" id="com-comercial-filter" onchange="renderComisiones()" style="width:160px"><option value="">Todos los comerciales</option></select>
+  </div>
+  <div id="comisiones-content"><div class="loading"><div class="spinner"></div>Cargando...</div></div>
 </div>
 
 <!-- COMERCIALES -->
@@ -598,7 +625,8 @@ function renderPedidos(){
   document.getElementById('tabla-pedidos').innerHTML=`<table><thead><tr>
     <th>Factura</th><th>Farmacia</th><th>CCAA</th><th>Mes</th><th>Formato</th>
     <th class="col-right">Bruto</th><th class="col-right">Neto</th>
-    <th class="col-right" style="color:var(--orange)">− Saura</th>
+    <th style="color:var(--accent)">Comercial</th>
+    <th class="col-right" style="color:var(--orange)">Comisión</th>
     <th class="col-right" style="color:var(--red)">− Coste</th>
     <th class="col-right" style="color:var(--green)">Beneficio</th>
     <th class="col-right">Margen</th>
@@ -606,6 +634,8 @@ function renderPedidos(){
   </tr></thead><tbody>${rows.map(p=>{
     const{coste,beneficio,pct:mp}=calcMargen(p.neto||0,p.units||30,p.formato||'case');
     const ccaa=guessCCAA(p.farmacia);
+    const comAsignado=p.comercial_id?comerciales.find(c=>c.id===p.comercial_id):null;
+    const comisionCalc=p.comercial_id?calcComision(p.siniva||0):0;
     return`<tr>
       <td><div class="cell" style="color:var(--muted2);font-size:11px">${p.factura||'—'}</div></td>
       <td><div class="cell"><strong>${p.farmacia}</strong>${pedidosBadge(p.farmacia,p.id)}${p.fecha?`<div style="font-size:10px;color:var(--muted2)">${p.fecha}</div>`:''}</div></td>
@@ -614,7 +644,11 @@ function renderPedidos(){
       ${makeCell('pedidos',p.id,'formato',`<span class="badge ${(p.formato||'case')==='case'?'b-case':'b-sobre'}">${(p.formato||'case')==='case'?'Case':'Sobre'}</span>`,{options:FMT_OPTS,cls:'col-center'})}
       ${makeCell('pedidos',p.id,'bruto',fmt2(p.bruto)+'€',{type:'number',cls:'col-right'})}
       ${makeCell('pedidos',p.id,'siniva',fmt2(p.siniva)+'€',{type:'number',cls:'col-right'})}
-      <td class="col-right"><div class="cell">${p.comision>0?`<div><span style="color:var(--orange);font-weight:600">-${fmt2(p.comision)}€</span><div style="font-size:9px;padding:1px 4px;border-radius:6px;background:var(--orangedim);color:var(--orange);font-weight:700;display:inline-block;margin-top:2px">SAURA</div></div>`:'<span style="color:var(--muted2)">—</span>'}</div></td>
+      <td><div class="cell">${comAsignado
+        ?`<span style="font-size:11px;font-weight:600;color:var(--accent)">${comAsignado.nombre}</span>`
+        :`<span class="warn-nocom">⚠ Sin com.</span>`
+      }</div></td>
+      <td class="col-right"><div class="cell">${comAsignado&&comisionCalc>0?`<span style="color:var(--orange);font-weight:600">${fmt2(comisionCalc)}€</span>`:'<span style="color:var(--muted2)">—</span>'}</div></td>
       <td class="col-right"><div class="cell" style="color:var(--red)">-${fmt2(coste)}€</div></td>
       <td class="col-right"><div class="cell" style="color:var(--green);font-weight:700">${fmt2(beneficio)}€</div></td>
       <td class="col-right"><div class="cell"><span class="margin-pill ${mgClass(p)}">${mp.toFixed(0)}%</span></div></td>
@@ -773,6 +807,164 @@ function renderComerciales(){
   }).join('');
 }
 
+// ─── COMISIONES ──────────────────────────────────────────────────
+function buildComisionesFilters(){
+  const opts=getMeses().map(m=>`<option>${m}</option>`).join('');
+  const sel=document.getElementById('com-mes-filter');
+  if(sel)sel.innerHTML=`<option value="">Todos los meses</option>${opts}`;
+  const comOpts=comerciales.map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('');
+  const csel=document.getElementById('com-comercial-filter');
+  if(csel)csel.innerHTML=`<option value="">Todos los comerciales</option>${comOpts}`;
+}
+
+function calcComision(siniva){return Math.round(siniva*0.15*100)/100;}
+
+async function toggleLiquidacion(mesKey,comercialId,currentPagado){
+  // Si ya está pagado: congelado, no se puede desmarcar
+  if(currentPagado){toast('Esta liquidación ya está pagada y está bloqueada ✓','ok');return;}
+  if(!confirm(`¿Marcar la liquidación de ${mesKey} como PAGADA? Esta acción es definitiva y no se puede deshacer.`))return;
+
+  // Buscar todos los pedidos del mes/comercial que aún no estén liquidados
+  const mesName=mesKey.split('|')[0];
+  const comId=parseInt(comercialId);
+  const com=comerciales.find(c=>c.id===comId);
+  if(!com)return;
+
+  // Actualizar en Supabase: marcar saura_pagado=SI en todos los pedidos del comercial en ese mes
+  // El "comercial asignado" se detecta por tener comision>0 y comercial_id=comId
+  const rows=pedidos.filter(p=>{
+    if(p.mes!==mesName)return false;
+    if(p.comercial_id!=comId)return false;
+    return(p.comision||0)>0;
+  });
+
+  if(!rows.length){toast('No hay pedidos con comisión en este mes','err');return;}
+
+  try{
+    const ids=rows.map(r=>r.id);
+    await sb.from('pedidos').update({saura_pagado:'SI'}).in('id',ids);
+    // Actualizar local
+    rows.forEach(r=>{const idx=pedidos.findIndex(p=>p.id===r.id);if(idx>=0)pedidos[idx].saura_pagado='SI';});
+    renderComisiones();renderDashboard();
+    toast(`Liquidación ${mesName} pagada y bloqueada ✓`,'ok');
+  }catch(e){toast('Error al liquidar','err');}
+}
+
+function renderComisiones(){
+  buildComisionesFilters();
+  const mesFilter=document.getElementById('com-mes-filter')?.value||'';
+  const comFilter=document.getElementById('com-comercial-filter')?.value||'';
+
+  // Pedidos SIN comercial asignado (comision>0 pero sin comercial_id, o comercial_id=null con comision auto)
+  // Para comisiones: trabajamos con pedidos que tienen comercial asignado (comercial_id no nulo)
+  const sinComercial=pedidos.filter(p=>(p.comision||0)===0&&p.pagado==='SI'&&!p.comercial_id);
+
+  // Alertas
+  const alertasDiv=document.getElementById('comisiones-alerts');
+  if(alertasDiv){
+    const pedSinCom=pedidos.filter(p=>!p.comercial_id&&(p.siniva||0)>0);
+    alertasDiv.innerHTML=pedSinCom.length
+      ?`<div class="alert alert-warn">⚠️ ${pedSinCom.length} pedido(s) sin comercial asignado → no generan comisión. Asígnalos en Pedidos.</div>`
+      :'';
+  }
+
+  // Agrupar pedidos por mes y comercial
+  // Usamos comercial_id para linkear. Si no hay, skipeamos
+  const grupos={};
+  pedidos.forEach(p=>{
+    if(!p.comercial_id)return;
+    const com=comerciales.find(c=>c.id===p.comercial_id);
+    if(!com)return;
+    if(mesFilter&&p.mes!==mesFilter)return;
+    if(comFilter&&String(p.comercial_id)!==comFilter)return;
+    const key=`${p.mes}|${p.comercial_id}`;
+    if(!grupos[key])grupos[key]={mes:p.mes,comercial:com,pedidos:[],totalSinIva:0,totalComision:0,allPagado:true};
+    const comision=calcComision(p.siniva||0);
+    grupos[key].pedidos.push({...p,comision_calc:comision});
+    grupos[key].totalSinIva+=(p.siniva||0);
+    grupos[key].totalComision+=comision;
+    if(p.saura_pagado!=='SI')grupos[key].allPagado=false;
+  });
+
+  // Ordenar por mes (orden cronológico)
+  const sorted=Object.entries(grupos).sort((a,b)=>MESES.indexOf(a[1].mes)-MESES.indexOf(b[1].mes));
+
+  const content=document.getElementById('comisiones-content');
+  if(!sorted.length){
+    content.innerHTML='<div class="empty-state">No hay pedidos con comercial asignado' + (mesFilter||comFilter?' para este filtro.':'. Asigna comerciales a los pedidos para ver comisiones.')+' </div>';
+    // Estadísticas vacías
+    document.getElementById('comisiones-sub').textContent='Sin datos de comisiones';
+    return;
+  }
+
+  // KPIs globales
+  const totalCom=sorted.reduce((s,[,g])=>s+g.totalComision,0);
+  const totalPend=sorted.filter(([,g])=>!g.allPagado).reduce((s,[,g])=>s+g.totalComision,0);
+  const totalPag=totalCom-totalPend;
+
+  document.getElementById('comisiones-sub').textContent=`${fmt2(totalCom)}€ total · ${fmt2(totalPend)}€ pendiente · ${fmt2(totalPag)}€ pagado`;
+
+  content.innerHTML=`
+  <div class="stats-grid" style="margin-bottom:1.5rem">
+    <div class="stat-card"><div class="stat-label">Total comisiones</div><div class="stat-value" style="color:var(--accent)">${fmt2(totalCom)}€</div><div class="stat-delta delta-neu">15% sobre neto</div></div>
+    <div class="stat-card"><div class="stat-label">Pendiente pagar</div><div class="stat-value" style="color:var(--orange)">${fmt2(totalPend)}€</div><div class="stat-delta delta-down">${sorted.filter(([,g])=>!g.allPagado).length} liquidaciones</div></div>
+    <div class="stat-card"><div class="stat-label">Ya pagado</div><div class="stat-value" style="color:var(--green)">${fmt2(totalPag)}€</div><div class="stat-delta delta-up">${sorted.filter(([,g])=>g.allPagado).length} liquidaciones</div></div>
+    <div class="stat-card"><div class="stat-label">Meses con comisión</div><div class="stat-value">${[...new Set(sorted.map(([,g])=>g.mes))].length}</div><div class="stat-delta delta-neu">Meses activos</div></div>
+  </div>
+  ${sorted.map(([key,g])=>{
+    const isPagado=g.allPagado;
+    return`<div class="com-mes-card">
+      <div class="com-mes-head" onclick="this.parentElement.querySelector('.com-mes-body').style.display=this.parentElement.querySelector('.com-mes-body').style.display==='none'?'block':'none'">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="com-mes-title">${g.mes} · ${g.comercial.nombre}</div>
+          ${isPagado
+            ?`<span class="liq-badge liq-pag" onclick="event.stopPropagation();toggleLiquidacion('${key}',${g.comercial.id},true)">🔒 Liquidado</span>`
+            :`<span class="liq-badge liq-pend" onclick="event.stopPropagation();toggleLiquidacion('${key}',${g.comercial.id},false)">⟳ Marcar pagado</span>`
+          }
+        </div>
+        <div class="com-mes-stats">
+          <div class="com-mes-stat"><span class="com-mes-stat-lbl">Pedidos</span><span class="com-mes-stat-val">${g.pedidos.length}</span></div>
+          <div class="com-mes-stat"><span class="com-mes-stat-lbl">Neto base</span><span class="com-mes-stat-val">${fmt2(g.totalSinIva)}€</span></div>
+          <div class="com-mes-stat"><span class="com-mes-stat-lbl">Comisión (15%)</span><span class="com-mes-stat-val" style="color:${isPagado?'var(--green)':'var(--orange)'};">${fmt2(g.totalComision)}€</span></div>
+        </div>
+      </div>
+      <div class="com-mes-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Farmacia</th><th>Factura</th><th class="col-right">Sin IVA</th>
+              <th class="col-right" style="color:var(--orange)">Comisión 15%</th>
+              <th>Pagado farmacia</th><th>Estado com.</th>
+            </tr></thead>
+            <tbody>${g.pedidos.map(p=>`<tr>
+              <td><div class="cell"><strong>${p.farmacia}</strong></div></td>
+              <td><div class="cell" style="color:var(--muted2);font-size:11px">${p.factura||'—'}</div></td>
+              <td class="col-right"><div class="cell">${fmt2(p.siniva||0)}€</div></td>
+              <td class="col-right"><div class="cell" style="color:var(--orange);font-weight:700">${fmt2(p.comision_calc)}€</div></td>
+              <td><div class="cell"><span class="badge ${bcPago(p.pagado)}">${p.pagado||'NO'}</span></div></td>
+              <td><div class="cell">
+                ${isPagado
+                  ?`<span class="badge b-si">🔒 Pagada</span>`
+                  :`<span class="badge b-no">Pendiente</span>`
+                }
+              </div></td>
+            </tr>`).join('')}
+            </tbody>
+            <tfoot>
+              <tr style="background:var(--surface2)">
+                <td colspan="2"><div class="cell" style="font-weight:700;color:var(--muted2)">TOTAL ${g.mes}</div></td>
+                <td class="col-right"><div class="cell" style="font-weight:700">${fmt2(g.totalSinIva)}€</div></td>
+                <td class="col-right"><div class="cell" style="font-weight:700;color:var(--orange)">${fmt2(g.totalComision)}€</div></td>
+                <td colspan="2"><div class="cell" style="font-size:11px;color:var(--muted2)">${isPagado?'✅ Liquidado':'⏳ Pendiente liquidación'}</div></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}`;
+}
+
 // ─── PANEL ────────────────────────────────────────────────────────
 function openPanel(type,id){
   if(type==='pedido'){
@@ -831,6 +1023,10 @@ function openModal(type,id=null){
       <div class="fg"><label>Unidades</label><input type="number" class="input" id="munits" value="${d.units||30}"></div>
       <div class="fg"><label>Bruto con IVA (€)</label><input type="number" class="input" id="mb" value="${d.bruto||''}" step="0.01"></div>
       <div class="fg"><label>Sin IVA (€)</label><input type="number" class="input" id="ms" value="${d.siniva||''}" step="0.01"></div>
+      <div class="fg"><label>Comercial asignado</label><select class="select" id="mcomercial">
+        <option value="">— Sin comercial —</option>
+        ${comerciales.map(c=>`<option value="${c.id}" ${d.comercial_id==c.id?'selected':''}>${c.nombre}</option>`).join('')}
+      </select></div>
       <div class="fg"><label>Comisión Saura (€)</label><input type="number" class="input" id="mc" value="${d.comision||0}" step="0.01"></div>
       <div class="fg"><label>Pagado farmacia</label><select class="select" id="mpag"><option ${d.pagado==='SI'?'selected':''}>SI</option><option ${d.pagado==='NO'?'selected':''}>NO</option><option ${d.pagado==='NO ENTREGADO'?'selected':''}>NO ENTREGADO</option></select></div>
       <div class="fg"><label>Enviado</label><select class="select" id="menv"><option ${d.enviado==='SI'?'selected':''}>SI</option><option ${d.enviado==='NO'?'selected':''}>NO</option></select></div>
@@ -882,7 +1078,8 @@ async function saveModal(){
     if(!farm){toast('El nombre es obligatorio','err');return;}
     const si=parseFloat(document.getElementById('ms').value)||0;
     const co=parseFloat(document.getElementById('mc').value)||0;
-    const rec={mes:document.getElementById('mmes').value,fecha:document.getElementById('mfecha').value||null,factura:document.getElementById('mfac').value.trim(),farmacia:farm,formato:document.getElementById('mfmt').value,units:parseInt(document.getElementById('munits').value)||30,bruto:parseFloat(document.getElementById('mb').value)||0,siniva:si,comision:co,neto:si-co,pagado:document.getElementById('mpag').value,enviado:document.getElementById('menv').value,saura_pagado:document.getElementById('mspag').value,web:document.getElementById('mweb').value.trim(),historia:document.getElementById('mhist').value.trim(),notas:document.getElementById('mn').value.trim()};
+    const comId=document.getElementById('mcomercial').value;
+    const rec={mes:document.getElementById('mmes').value,fecha:document.getElementById('mfecha').value||null,factura:document.getElementById('mfac').value.trim(),farmacia:farm,formato:document.getElementById('mfmt').value,units:parseInt(document.getElementById('munits').value)||30,bruto:parseFloat(document.getElementById('mb').value)||0,siniva:si,comision:co,neto:si-co,pagado:document.getElementById('mpag').value,enviado:document.getElementById('menv').value,saura_pagado:document.getElementById('mspag').value,web:document.getElementById('mweb').value.trim(),historia:document.getElementById('mhist').value.trim(),notas:document.getElementById('mn').value.trim(),comercial_id:comId?parseInt(comId):null};
     if(editId){await sb.from('pedidos').update(rec).eq('id',editId);}else{await sb.from('pedidos').insert(rec);}
     const{data}=await sb.from('pedidos').select('*').order('id');pedidos=data||[];
     renderAll();toast('Pedido guardado ✓','ok');
@@ -944,7 +1141,7 @@ function showView(id,el){
   document.getElementById('view-'+id).classList.add('active');
   el.classList.add('active');closePanel();
 }
-function renderAll(){renderDashboard();renderPedidos();renderFarmacias();renderComerciales();renderVisitadas();}
+function renderAll(){renderDashboard();renderPedidos();renderFarmacias();renderComerciales();renderVisitadas();renderComisiones();}
 
 function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';setTimeout(()=>t.classList.remove('show'),3000);}
 
